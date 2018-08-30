@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "TicTacToe\TicTacToe.csproj", "{DEBB76FA-25A6-439D-B935-010DD168F4EF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{43BDEA69-53DC-4476-B20B-9FBDF2512409}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6B71058E-E498-46F5-9839-3AEBC093F8DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "source\TicTacToe\TicTacToe.csproj", "{DEBB76FA-25A6-439D-B935-010DD168F4EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.Engine", "source\TicTacToe.Engine\TicTacToe.Engine.csproj", "{6A198133-27E2-49E2-963E-9D59A4548A8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.Engine.Tests", "tests\TicTacToe.Engine.Tests\TicTacToe.Engine.Tests.csproj", "{782A367E-9204-4038-AD9A-BA75D75BE20E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Engine.Benchmarks", "tests\TicTacToe.Engine.Benchmarks\TicTacToe.Engine.Benchmarks.csproj", "{FD644340-CBDE-4CDB-9E03-89059CA2D61D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +25,27 @@ Global
 		{DEBB76FA-25A6-439D-B935-010DD168F4EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEBB76FA-25A6-439D-B935-010DD168F4EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEBB76FA-25A6-439D-B935-010DD168F4EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A198133-27E2-49E2-963E-9D59A4548A8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A198133-27E2-49E2-963E-9D59A4548A8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A198133-27E2-49E2-963E-9D59A4548A8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A198133-27E2-49E2-963E-9D59A4548A8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{782A367E-9204-4038-AD9A-BA75D75BE20E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{782A367E-9204-4038-AD9A-BA75D75BE20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{782A367E-9204-4038-AD9A-BA75D75BE20E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{782A367E-9204-4038-AD9A-BA75D75BE20E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD644340-CBDE-4CDB-9E03-89059CA2D61D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD644340-CBDE-4CDB-9E03-89059CA2D61D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD644340-CBDE-4CDB-9E03-89059CA2D61D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD644340-CBDE-4CDB-9E03-89059CA2D61D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DEBB76FA-25A6-439D-B935-010DD168F4EF} = {43BDEA69-53DC-4476-B20B-9FBDF2512409}
+		{6A198133-27E2-49E2-963E-9D59A4548A8B} = {43BDEA69-53DC-4476-B20B-9FBDF2512409}
+		{782A367E-9204-4038-AD9A-BA75D75BE20E} = {6B71058E-E498-46F5-9839-3AEBC093F8DD}
+		{FD644340-CBDE-4CDB-9E03-89059CA2D61D} = {6B71058E-E498-46F5-9839-3AEBC093F8DD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78A9F6C9-8108-47FC-A1C3-A91FF4EA7983}
