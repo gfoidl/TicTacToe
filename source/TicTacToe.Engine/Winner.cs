@@ -4,6 +4,7 @@
 	{
 		Machine = 1,
 		Draw 	= 0,
-		User 	= -1
+		User 	= -1,
+		None 	= 2
 	}
 }

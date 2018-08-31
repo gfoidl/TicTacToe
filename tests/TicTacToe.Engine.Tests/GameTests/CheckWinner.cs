@@ -14,7 +14,7 @@ namespace TicTacToe.Engine.Tests.GameTests
 
 			sut.CheckWinner();
 
-			Assert.IsNull(sut.Winner);
+			Assert.AreEqual(Winner.None, sut.Winner);
 		}
 		//---------------------------------------------------------------------
 		[Test]
@@ -28,7 +28,7 @@ namespace TicTacToe.Engine.Tests.GameTests
 
 			sut.CheckWinner();
 
-			Assert.IsNull(sut.Winner);
+			Assert.AreEqual(Winner.None, sut.Winner);
 		}
 		//---------------------------------------------------------------------
 		[Test]

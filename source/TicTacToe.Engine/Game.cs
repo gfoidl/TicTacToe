@@ -9,6 +9,7 @@ namespace TicTacToe.Engine
 	public class Game
 	{
 		private static readonly int[] s_WinPatterns;
+		private readonly AlphaBetaPruning _engine = new AlphaBetaPruning();
 		//---------------------------------------------------------------------
 		static Game()
 		{
@@ -34,7 +35,7 @@ namespace TicTacToe.Engine
 		}
 		//---------------------------------------------------------------------
 		public FieldState[] Fields { get; } = Enumerable.Repeat(FieldState.Empty, 9).ToArray();
-		public Winner? Winner { get; internal set; }
+		public Winner Winner { get; internal set; } = Winner.None;
 		//---------------------------------------------------------------------
 		public MoveResult MakeMove(int fieldIdx)
 		{
@@ -45,12 +46,9 @@ namespace TicTacToe.Engine
 		//---------------------------------------------------------------------
 		public MoveResult MakeMachineMove()
 		{
-			int i = 0;
-			for (; i < this.Fields.Length; ++i)
-				if (this.Fields[i] == FieldState.Empty)
-					break;
+			int bestMove = _engine.FindBestMove(this.Fields);
 
-			return this.PerformMove(i, FieldState.Machine);
+			return this.PerformMove(bestMove, FieldState.Machine);
 		}
 		//---------------------------------------------------------------------
 		private MoveResult PerformMove(int fieldIdx, FieldState fieldState)
@@ -63,54 +61,46 @@ namespace TicTacToe.Engine
 		//---------------------------------------------------------------------
 		internal bool IsMoveLegal(int index) => this.Fields[index] == FieldState.Empty;
 		//---------------------------------------------------------------------
-		internal unsafe void CheckWinner()
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal void CheckWinner() => this.Winner = CheckWinner(ref this.Fields[0]);
+		//---------------------------------------------------------------------
+		internal static Winner CheckWinner(ref FieldState fields)
 		{
 			if (Vector.IsHardwareAccelerated && Vector<int>.Count == 8)
 			{
-				fixed (int* ptr = s_WinPatterns)
-				{
-					Vector<int> comparand = Unsafe.ReadUnaligned<Vector<int>>(ptr);
+				Vector<int> comparand = Unsafe.As<int, Vector<int>>(ref s_WinPatterns[0]);
 
-					int machine = this.TransformGameToValue(FieldState.Machine);
-					if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(machine)), comparand))
-					{
-						this.Winner = Engine.Winner.Machine;
-						return;
-					}
+				int machine = TransformGameToValue(ref fields, FieldState.Machine);
+				if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(machine)), comparand))
+					return Winner.Machine;
 
-					int user = this.TransformGameToValue(FieldState.User);
-					if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(user)), comparand))
-						this.Winner = Engine.Winner.User;
-				}
+				int user = TransformGameToValue(ref fields, FieldState.User);
+				if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(user)), comparand))
+					return Winner.User;
 			}
 			else
 			{
 				int[] patterns = s_WinPatterns;
-				int machine = this.TransformGameToValue(FieldState.Machine);
-				int user = this.TransformGameToValue(FieldState.User);
+				int machine = TransformGameToValue(ref fields, FieldState.Machine);
+				int user = TransformGameToValue(ref fields, FieldState.User);
 
 				for (int i = 0; i < patterns.Length; ++i)
 				{
 					if ((patterns[i] & machine) == patterns[i])
-					{
-						this.Winner = Engine.Winner.Machine;
-						return;
-					}
+						return Winner.Machine;
 
 					if ((patterns[i] & user) == patterns[i])
-					{
-						this.Winner = Engine.Winner.User;
-						return;
-					}
+						return Winner.User;
 				}
 			}
+
+			return Winner.None;
 		}
 		//---------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private int TransformGameToValue(FieldState match)
+		private static int TransformGameToValue(ref FieldState fields, FieldState match)
 		{
 			int tmp = 0;
-			ref FieldState fields = ref this.Fields[0];
 
 			// Loop unrolled
 			if (Unsafe.Add(ref fields, 0) == match) tmp |= 1 << 0;
@@ -126,43 +116,58 @@ namespace TicTacToe.Engine
 			return tmp;
 		}
 		//---------------------------------------------------------------------
-		internal unsafe bool IsFinal()
+		internal bool IsFinal() => IsFinal(this.Winner, ref this.Fields[0]);
+		//---------------------------------------------------------------------
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static bool IsFinal(Winner winner, ref FieldState fields)
 		{
-			if (this.Winner.HasValue) return true;
-
 			// x64 -> 8
 			// x86 -> 4
 			if (Vector.IsHardwareAccelerated && (Vector<int>.Count == 8 || Vector<int>.Count == 4))
 			{
-				fixed (FieldState* tmpPtr = this.Fields)
+				bool isFinal = true;
+
+				if (winner != Winner.None) goto Exit;
+
+				Vector<int> vec = Unsafe.As<FieldState, Vector<int>>(ref fields);
+
+				if (Vector.EqualsAny(Vector<int>.Zero, vec))
 				{
-					int* ptr = (int*)tmpPtr;
-
-					Vector<int> vec = Unsafe.ReadUnaligned<Vector<int>>(ptr + 0);
-					if (Vector.EqualsAny(Vector<int>.Zero, vec))
-						return false;
-
-					if (Vector<int>.Count == 4)
-					{
-						vec = Unsafe.ReadUnaligned<Vector<int>>(ptr + 4);
-						if (Vector.EqualsAny(Vector<int>.Zero, vec))
-							return false;
-					}
-
-					if (ptr[8] == (int)FieldState.Empty)
-						return false;
+					isFinal = false;
+					goto Exit;
 				}
+
+				if (Vector<int>.Count == 4)
+				{
+					vec = Unsafe.As<FieldState, Vector<int>>(ref Unsafe.Add(ref fields, 4));
+					if (Vector.EqualsAny(Vector<int>.Zero, vec))
+					{
+						isFinal = false;
+						goto Exit;
+					}
+				}
+
+				if (Unsafe.Add(ref fields, 8) == FieldState.Empty)
+				{
+					isFinal = false;
+					goto Exit;
+				}
+
+				Exit:
+				return isFinal;
 			}
 			else
 			{
+				if (winner != Winner.None) return true;
+
 				for (int i = 0; i < 9; ++i)
 				{
-					if (this.Fields[i] == FieldState.Empty)
+					if (Unsafe.Add(ref fields, i) == FieldState.Empty)
 						return false;
 				}
-			}
 
-			return true;
+				return true;
+			}
 		}
 	}
 }
