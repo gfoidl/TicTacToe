@@ -20,11 +20,12 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Only_two_rounds___no_winner()
 		{
-			var sut = new Game();
+			var sut   = new Game();
+			var board = sut.Board;
 
-			sut.Fields[0] = FieldState.User;
-			sut.Fields[1] = FieldState.User;
-			sut.Fields[4] = FieldState.Machine;
+			board[0] = FieldState.User;
+			board[1] = FieldState.User;
+			board[4] = FieldState.Machine;
 
 			sut.CheckWinner();
 
@@ -35,10 +36,11 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[TestCaseSource(nameof(User_wins___winner_set_TestCases))]
 		public void User_wins___winner_set(FieldState[] fieldStates)
 		{
-			var sut = new Game();
+			var sut   = new Game();
+			var board = sut.Board;
 
-			for (int i = 0; i < sut.Fields.Length; ++i)
-				sut.Fields[i] = fieldStates[i];
+			for (int i = 0; i < 9; ++i)
+				board[i] = fieldStates[i];
 
 			sut.CheckWinner();
 
@@ -72,10 +74,11 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[TestCaseSource(nameof(Machine_wins___winner_set_TestCases))]
 		public void Machine_wins___winner_set(FieldState[] fieldStates)
 		{
-			var sut = new Game();
+			var sut   = new Game();
+			var board = sut.Board;
 
-			for (int i = 0; i < sut.Fields.Length; ++i)
-				sut.Fields[i] = fieldStates[i];
+			for (int i = 0; i < 9; ++i)
+				board[i] = fieldStates[i];
 
 			sut.CheckWinner();
 

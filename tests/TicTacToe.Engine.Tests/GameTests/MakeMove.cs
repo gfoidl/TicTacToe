@@ -22,9 +22,10 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Illegal_move___OK()
 		{
-			var sut = new Game();
+			var sut   = new Game();
+			var board = sut.Board;
 
-			sut.Fields[3] = FieldState.Machine;
+			board[3] = FieldState.Machine;
 
 			MoveResult actual = sut.MakeMove(3);
 
@@ -38,12 +39,13 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Legal_move_game_done___OK()
 		{
-			var sut = new Game();
+			var sut   = new Game();
+			var board = sut.Board;
 
-			for (int i = 0; i < sut.Fields.Length; ++i)
-				sut.Fields[i] = FieldState.Machine;
+			for (int i = 0; i < 9; ++i)
+				board[i] = FieldState.Machine;
 
-			sut.Fields[3] = FieldState.Empty;
+			board[3] = FieldState.Empty;
 
 			MoveResult actual = sut.MakeMove(3);
 

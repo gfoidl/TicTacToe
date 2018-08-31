@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace TicTacToe.Engine.Tests.GameTests
+namespace TicTacToe.Engine.Tests.BoardTests
 {
 	[TestFixture]
 	public class IsMoveLegal
@@ -8,7 +8,7 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Field_is_empty___true()
 		{
-			var sut = new Game();
+			var sut = new Board(true);
 
 			bool actual = sut.IsMoveLegal(3);
 
@@ -18,9 +18,8 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Field_is_user___false()
 		{
-			var sut 	 = new Game();
-			var board 	 = sut.Board;
-			board[3] 	 = FieldState.User;
+			var sut = new Board(true);
+			sut[3] 	= FieldState.User;
 
 			bool actual = sut.IsMoveLegal(3);
 
@@ -30,9 +29,8 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Field_is_machine___false()
 		{
-			var sut 	 = new Game();
-			var board 	 = sut.Board;
-			board[3] 	 = FieldState.Machine;
+			var sut = new Board(true);
+			sut[3] 	= FieldState.Machine;
 
 			bool actual = sut.IsMoveLegal(3);
 

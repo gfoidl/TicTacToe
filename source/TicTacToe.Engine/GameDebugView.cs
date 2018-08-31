@@ -19,7 +19,7 @@ namespace TicTacToe.Engine
 		//---------------------------------------------------------------------
 		private string GetFieldSign(int index)
 		{
-			FieldState fieldState = _game.Fields[index];
+			FieldState fieldState = _game.Board[index];
 
 			switch (fieldState)
 			{

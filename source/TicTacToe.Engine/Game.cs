@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -9,18 +8,19 @@ namespace TicTacToe.Engine
 	public class Game
 	{
 		private static readonly int[] s_WinPatterns;
+		private Board 					  _board  = new Board(init: true);
 		private readonly AlphaBetaPruning _engine = new AlphaBetaPruning();
 		//---------------------------------------------------------------------
 		static Game()
 		{
 			const string pattern = "WWW......|...WWW...|......WWW|W..W..W..|.W..W..W.|..W..W..W|W...W...W|..W.W.W..";
-			string[] parts = pattern.Split('|');
-			var winPatterns = new int[parts.Length];
+			string[] parts 		 = pattern.Split('|');
+			var winPatterns 	 = new int[parts.Length];
 
 			for (int i = 0; i < parts.Length; ++i)
 			{
 				string pat = parts[i];
-				int tmp = 0;
+				int tmp    = 0;
 
 				for (int j = 0; j < 9; ++j)
 				{
@@ -34,7 +34,7 @@ namespace TicTacToe.Engine
 			s_WinPatterns = winPatterns;
 		}
 		//---------------------------------------------------------------------
-		public FieldState[] Fields { get; } = Enumerable.Repeat(FieldState.Empty, 9).ToArray();
+		public Board Board => _board;
 		public Winner Winner { get; internal set; } = Winner.None;
 		//---------------------------------------------------------------------
 		public MoveResult MakeMove(int fieldIdx)
@@ -46,23 +46,23 @@ namespace TicTacToe.Engine
 		//---------------------------------------------------------------------
 		public MoveResult MakeMachineMove()
 		{
-			int bestMove = _engine.FindBestMove(this.Fields);
+			int bestMove = _engine.FindBestMove(_board);
 
 			return this.PerformMove(bestMove, FieldState.Machine);
 		}
 		//---------------------------------------------------------------------
 		private MoveResult PerformMove(int fieldIdx, FieldState fieldState)
 		{
-			this.Fields[fieldIdx] = fieldState;
+			_board[fieldIdx] = fieldState;
 			this.CheckWinner();
 
 			return new MoveResult(true, this.IsFinal());
 		}
 		//---------------------------------------------------------------------
-		internal bool IsMoveLegal(int index) => this.Fields[index] == FieldState.Empty;
+		internal bool IsMoveLegal(int index) => _board.IsMoveLegal(index);
 		//---------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal void CheckWinner() => this.Winner = CheckWinner(ref this.Fields[0]);
+		internal void CheckWinner() => this.Winner = CheckWinner(ref _board.Fields);
 		//---------------------------------------------------------------------
 		internal static Winner CheckWinner(ref FieldState fields)
 		{
@@ -81,8 +81,8 @@ namespace TicTacToe.Engine
 			else
 			{
 				int[] patterns = s_WinPatterns;
-				int machine = TransformGameToValue(ref fields, FieldState.Machine);
-				int user = TransformGameToValue(ref fields, FieldState.User);
+				int machine    = TransformGameToValue(ref fields, FieldState.Machine);
+				int user 	   = TransformGameToValue(ref fields, FieldState.User);
 
 				for (int i = 0; i < patterns.Length; ++i)
 				{
@@ -116,7 +116,7 @@ namespace TicTacToe.Engine
 			return tmp;
 		}
 		//---------------------------------------------------------------------
-		internal bool IsFinal() => IsFinal(this.Winner, ref this.Fields[0]);
+		internal bool IsFinal() => IsFinal(this.Winner, ref _board.Fields);
 		//---------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal static bool IsFinal(Winner winner, ref FieldState fields)

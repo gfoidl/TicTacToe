@@ -7,13 +7,13 @@ namespace TicTacToe.Engine
 {
 	internal class AlphaBetaPruning
 	{
-		public int FindBestMove(FieldState[] fields)
+		public int FindBestMove(Board board)
 		{
 			int bestMove = -1;
 
-			for (int i = 0; i < fields.Length; ++i)
+			for (int i = 0; i < 9; ++i)
 			{
-				if (fields[i] != FieldState.Empty) continue;
+				if (board[i] != FieldState.Empty) continue;
 
 				return i;
 			}

@@ -31,10 +31,11 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[TestCase(FieldState.Machine)]
 		public void No_winner_no_empty_fields___true(FieldState fieldState)
 		{
-			var sut = new Game();
+			var sut   = new Game();
+			var board = sut.Board;
 
-			for (int i = 0; i < sut.Fields.Length; ++i)
-				sut.Fields[i] = fieldState;
+			for (int i = 0; i < 9; ++i)
+				board[i] = fieldState;
 
 			bool actual = sut.IsFinal();
 

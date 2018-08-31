@@ -13,7 +13,7 @@ namespace TicTacToe.ViewModels
 		private readonly IDialogService _dialogService;
 		private Game 					_game;
 		//---------------------------------------------------------------------
-		public FieldState[] Fields => _game.Fields;
+		public Board Board => _game.Board;
 		//---------------------------------------------------------------------
 		private bool _isBusy;
 		public bool IsBusy
@@ -55,7 +55,7 @@ namespace TicTacToe.ViewModels
 		private void OnPropertyChanged(string propertyName)
 			=> this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		//---------------------------------------------------------------------
-		private void FieldsChanged() => this.OnPropertyChanged(nameof(this.Fields));
+		private void FieldsChanged() => this.OnPropertyChanged(nameof(this.Board));
 		//---------------------------------------------------------------------
 		private RelayCommand _userMoveCommand;
 		public ICommand UserMoveCommand => _userMoveCommand ?? (_userMoveCommand = new RelayCommand(this.FieldTicked));
@@ -101,9 +101,9 @@ namespace TicTacToe.ViewModels
 		//---------------------------------------------------------------------
 		private void FinalInfo()
 		{
-			Winner? winner = _game.Winner;
+			Winner winner = _game.Winner;
 
-			if (winner == null) return;
+			if (winner == Winner.None) return;
 
 			string msg;
 
