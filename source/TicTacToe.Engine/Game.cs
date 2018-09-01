@@ -8,10 +8,10 @@ namespace TicTacToe.Engine
 	[DebuggerTypeProxy(typeof(GameDebugView))]
 	public class Game
 	{
-		private Board 			 _board = new Board();
+		private Board            _board = new Board();
 		private readonly IEngine _engine;
 		//---------------------------------------------------------------------
-		public Game() : this(new MiniMaxEngine()) { }
+		public Game() : this(new AlphaBetaPruningEngine()) { }
 		public Game(IEngine engine) => _engine = engine ?? throw new ArgumentNullException(nameof(engine));
 		//---------------------------------------------------------------------
 		public ref Board Board => ref _board;

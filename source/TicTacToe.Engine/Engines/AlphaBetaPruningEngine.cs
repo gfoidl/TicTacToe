@@ -1,29 +1,18 @@
 ﻿namespace TicTacToe.Engine.Engines
 {
-	public class AlphaBetaPruningEngine : IEngine
+	public class AlphaBetaPruningEngine : MiniMaxEngine
 	{
-		public int FindBestMove(Board board)
+		protected override int MiniMax(Board board, bool machineMove, int depth)
 		{
-			int bestScore = int.MinValue;
-			int bestMove  = -1;
+			const int alpha    = -10_000;
+			const int beta 	   =  10_000;
+			const int maxScore = alpha;
 
-			foreach (int index in board.GetEmptyFields())
-			{
-				Board newBoard 	= board;     // makes a copy
-				newBoard[index] = FieldState.Machine;
-				int score 		= this.MiniMax(newBoard, false, 0, int.MinValue, int.MaxValue);
-
-				if (score > bestScore)
-				{
-					bestMove  = index;
-					bestScore = score;
-				}
-			}
-
-			return bestMove;
+			// First call to "max" already done, so this is a call to "min"
+			return this.AlphaBetaPruning(board, machineMove, depth, -beta, -maxScore);
 		}
 		//---------------------------------------------------------------------
-		private int MiniMax(Board board, bool machineMove, int depth, int alpha, int beta)
+		private int AlphaBetaPruning(Board board, bool machineMove, int depth, int alpha, int beta)
 		{
 			Winner winner = board.CheckWinner();
 			if (winner != Winner.None)
@@ -36,9 +25,9 @@
 			int maxScore = alpha;
 			foreach (int index in board.GetEmptyFields())
 			{
-				Board newBoard 	= board;     // makes a copy
+				Board newBoard  = board;     // makes a copy
 				newBoard[index] = machineMove ? FieldState.Machine : FieldState.User;
-				int score 		= -this.MiniMax(newBoard, !machineMove, depth++, -beta, -maxScore);
+				int score       = -this.AlphaBetaPruning(newBoard, !machineMove, depth + 1, -beta, -maxScore);
 
 				if (score > maxScore)
 				{
@@ -50,19 +39,6 @@
 			}
 
 			return maxScore;
-		}
-		//---------------------------------------------------------------------
-		// For testing
-		internal int GetScoreForWinner(Winner winner, bool machineMove, int depth)
-		{
-			Winner me = machineMove
-				? Winner.Machine
-				: Winner.User;
-
-			if (winner == me)
-				return 10 - depth;
-			else
-				return -10 + depth;
 		}
 	}
 }

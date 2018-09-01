@@ -29,7 +29,7 @@ namespace TicTacToe.Engine.Engines
 			return bestMove;
 		}
 		//---------------------------------------------------------------------
-		private int MiniMax(Board board, bool machineMove, int depth)
+		protected virtual int MiniMax(Board board, bool machineMove, int depth)
 		{
 			Winner winner = board.CheckWinner();
 			if (winner != Winner.None)
