@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace TicTacToe.Engine
 {
+	[DebuggerTypeProxy(typeof(BoardDebugView))]
 	public struct Board
 	{
 		private static readonly int[] s_WinPatterns;
@@ -69,8 +70,14 @@ namespace TicTacToe.Engine
 		//---------------------------------------------------------------------
 		public IEnumerable<int> GetEmptyFields()
 		{
+			int invertedSetFields = ~(_machine | _user);
+
 			for (int i = 0; i < 9; ++i)
-				if (this[i] == FieldState.Empty) yield return i;
+			{
+				bool isSet = ((invertedSetFields >> i) & 1) > 0;
+
+				if (isSet) yield return i;
+			}
 		}
 		//---------------------------------------------------------------------
 		public Winner CheckWinner()
@@ -106,7 +113,6 @@ namespace TicTacToe.Engine
 			return Winner.None;
 		}
 		//---------------------------------------------------------------------
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool HasEmptyFields()
 		{
 			// The set fields are stored in a int, for machine and user separately.
@@ -123,5 +129,8 @@ namespace TicTacToe.Engine
 		private static bool Get(int value, int index) 		=> ((value >> index) & 1) > 0;
 		private static void Set(ref int value, int index) 	=> value |= 1 << index;
 		private static void UnSet(ref int value, int index) => value &= ~(1 << index);
+		//---------------------------------------------------------------------
+		[DebuggerNonUserCode]
+		public override string ToString() => BoardDebugView.GetString(this);
 	}
 }

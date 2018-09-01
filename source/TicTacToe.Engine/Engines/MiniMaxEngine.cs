@@ -1,29 +1,35 @@
-﻿namespace TicTacToe.Engine.Engines
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
+namespace TicTacToe.Engine.Engines
 {
-	public class AlphaBetaPruningEngine : IEngine
+	public class MiniMaxEngine : IEngine
 	{
 		public int FindBestMove(Board board)
 		{
-			int bestScore = int.MinValue;
+			Debug.WriteLine($"{board}\n");
+
 			int bestMove  = -1;
+			int bestScore = int.MinValue;
 
 			foreach (int index in board.GetEmptyFields())
 			{
 				Board newBoard 	= board;     // makes a copy
 				newBoard[index] = FieldState.Machine;
-				int score 		= this.MiniMax(newBoard, false, 0, int.MinValue, int.MaxValue);
+				int score 		= -this.MiniMax(newBoard, machineMove: false, depth: 0);
+				Debug.WriteLine($"field: {index}\tscore: {score}");
 
 				if (score > bestScore)
 				{
-					bestMove  = index;
 					bestScore = score;
+					bestMove  = index;
 				}
 			}
 
 			return bestMove;
 		}
 		//---------------------------------------------------------------------
-		private int MiniMax(Board board, bool machineMove, int depth, int alpha, int beta)
+		private int MiniMax(Board board, bool machineMove, int depth)
 		{
 			Winner winner = board.CheckWinner();
 			if (winner != Winner.None)
@@ -33,36 +39,31 @@
 			if (!board.HasEmptyFields())
 				return 0;
 
-			int maxScore = alpha;
+			int maxScore = int.MinValue;
 			foreach (int index in board.GetEmptyFields())
 			{
 				Board newBoard 	= board;     // makes a copy
 				newBoard[index] = machineMove ? FieldState.Machine : FieldState.User;
-				int score 		= -this.MiniMax(newBoard, !machineMove, depth++, -beta, -maxScore);
+				int score 		= -this.MiniMax(newBoard, !machineMove, depth + 1);
 
 				if (score > maxScore)
-				{
 					maxScore = score;
-
-					if (maxScore >= beta)
-						break;
-				}
 			}
 
 			return maxScore;
 		}
 		//---------------------------------------------------------------------
-		// For testing
+		// internal for testing
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal int GetScoreForWinner(Winner winner, bool machineMove, int depth)
 		{
 			Winner me = machineMove
 				? Winner.Machine
 				: Winner.User;
 
-			if (winner == me)
-				return 10 - depth;
-			else
-				return -10 + depth;
+			return winner == me
+				? 10 - depth
+				: -10 + depth;
 		}
 	}
 }
