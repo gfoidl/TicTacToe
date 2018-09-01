@@ -132,5 +132,7 @@ namespace TicTacToe.Engine
 		//---------------------------------------------------------------------
 		[DebuggerNonUserCode]
 		public override string ToString() => BoardDebugView.GetString(this);
+		//---------------------------------------------------------------------
+		public int GetKey() => (_user << 16) | _machine;
 	}
 }

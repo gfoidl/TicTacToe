@@ -5,7 +5,7 @@ namespace TicTacToe.Engine.Engines
 {
 	public class MiniMaxEngine : IEngine
 	{
-		public int FindBestMove(Board board)
+		public virtual int FindBestMove(Board board)
 		{
 			Debug.WriteLine($"{board}\n");
 
