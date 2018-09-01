@@ -31,8 +31,8 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[TestCase(FieldState.Machine)]
 		public void No_winner_no_empty_fields___true(FieldState fieldState)
 		{
-			var sut   = new Game();
-			var board = sut.Board;
+			var sut   	  	= new Game();
+			ref Board board = ref sut.Board;
 
 			for (int i = 0; i < 9; ++i)
 				board[i] = fieldState;
@@ -45,8 +45,8 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void No_winner_no_empty_fields___winner_for_draw_set_and_true()
 		{
-			var sut   = new Game();
-			var board = sut.Board;
+			var sut 		= new Game();
+			ref Board board = ref sut.Board;
 
 			board[0] = FieldState.Machine;
 			board[1] = FieldState.User;
@@ -70,8 +70,8 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Winner_set_no_empty_fields___winner_not_changed_and_true()
 		{
-			var sut   = new Game();
-			var board = sut.Board;
+			var sut 		= new Game();
+			ref Board board = ref sut.Board;
 
 			board[0] = FieldState.Machine;
 			board[1] = FieldState.User;

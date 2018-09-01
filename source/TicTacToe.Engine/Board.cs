@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace TicTacToe.Engine
 {
-	public class Board
+	public struct Board
 	{
 		private static readonly int[] s_WinPatterns;
 		//---------------------------------------------------------------------
@@ -34,10 +34,6 @@ namespace TicTacToe.Engine
 		//---------------------------------------------------------------------
 		private int _user;
 		private int _machine;
-		//---------------------------------------------------------------------
-		internal int UserFields	   => _user;
-		internal int MachineFields => _machine;
-		internal int SetFields 	   => _user | _machine;
 		//---------------------------------------------------------------------
 		public FieldState this[int index]
 		{
