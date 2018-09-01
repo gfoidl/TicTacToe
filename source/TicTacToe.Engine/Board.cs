@@ -1,29 +1,57 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace TicTacToe.Engine
 {
-	public readonly struct Board
+	public class Board
 	{
-		private readonly FieldState[] _fields;
+		private int _user;
+		private int _machine;
 		//---------------------------------------------------------------------
-		public ref FieldState Fields => ref _fields[0];
-		//---------------------------------------------------------------------
-		public Board(bool init) : this(new FieldState[9]) { }
-		public Board(FieldState[] fields) => _fields = fields;
+		internal int UserFields	   => _user;
+		internal int MachineFields => _machine;
+		internal int SetFields 	   => _user | _machine;
 		//---------------------------------------------------------------------
 		public FieldState this[int index]
 		{
-			get => _fields[index];
-			set => _fields[index] = value;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
+			{
+				if (Get(_machine, index)) return FieldState.Machine;
+				if (Get(_user, index))    return FieldState.User;
+				return FieldState.Empty;
+			}
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			set
+			{
+				if (value == FieldState.Machine)
+				{
+					Set(ref _machine, index);
+					UnSet(ref _user, index);
+				}
+				else if (value == FieldState.User)
+				{
+					Set(ref _user, index);
+					UnSet(ref _machine, index);
+				}
+				else
+				{
+					UnSet(ref _machine, index);
+					UnSet(ref _user, index);
+				}
+			}
 		}
 		//---------------------------------------------------------------------
 		public bool IsMoveLegal(int index) => this[index] == FieldState.Empty;
 		//---------------------------------------------------------------------
 		public IEnumerable<int> GetEmptyFields()
 		{
-			FieldState[] fields = _fields;
-			for (int i = 0; i < fields.Length; ++i)
-				if (fields[i] == FieldState.Empty) yield return i;
+			for (int i = 0; i < 9; ++i)
+				if (this[i] == FieldState.Empty) yield return i;
 		}
+		//---------------------------------------------------------------------
+		private static bool Get(int value, int index) 		=> ((value >> index) & 1) > 0;
+		private static void Set(ref int value, int index) 	=> value |= 1 << index;
+		private static void UnSet(ref int value, int index) => value &= ~(1 << index);
 	}
 }

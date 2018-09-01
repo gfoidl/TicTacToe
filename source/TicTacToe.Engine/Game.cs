@@ -10,7 +10,7 @@ namespace TicTacToe.Engine
 	public class Game
 	{
 		private static readonly int[] s_WinPatterns;
-		private Board 			 _board = new Board(init: true);
+		private Board 			 _board = new Board();
 		private readonly IEngine _engine;
 		//---------------------------------------------------------------------
 		static Game()
@@ -70,27 +70,27 @@ namespace TicTacToe.Engine
 		internal bool IsMoveLegal(int index) => _board.IsMoveLegal(index);
 		//---------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal void CheckWinner() => this.Winner = CheckWinner(ref _board.Fields);
+		internal void CheckWinner() => this.Winner = CheckWinner(_board);
 		//---------------------------------------------------------------------
-		internal static Winner CheckWinner(ref FieldState fields)
+		internal static Winner CheckWinner(Board board)
 		{
+			Debug.Assert(s_WinPatterns.Length == 8);
+
 			if (Vector.IsHardwareAccelerated && Vector<int>.Count == 8)
 			{
 				Vector<int> comparand = Unsafe.As<int, Vector<int>>(ref s_WinPatterns[0]);
 
-				int machine = TransformGameToValue(ref fields, FieldState.Machine);
-				if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(machine)), comparand))
+				if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(board.MachineFields)), comparand))
 					return Winner.Machine;
 
-				int user = TransformGameToValue(ref fields, FieldState.User);
-				if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(user)), comparand))
+				if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(board.UserFields)), comparand))
 					return Winner.User;
 			}
 			else
 			{
 				int[] patterns = s_WinPatterns;
-				int machine    = TransformGameToValue(ref fields, FieldState.Machine);
-				int user 	   = TransformGameToValue(ref fields, FieldState.User);
+				int machine    = board.MachineFields;
+				int user 	   = board.UserFields;
 
 				for (int i = 0; i < patterns.Length; ++i)
 				{
@@ -105,88 +105,33 @@ namespace TicTacToe.Engine
 			return Winner.None;
 		}
 		//---------------------------------------------------------------------
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static int TransformGameToValue(ref FieldState fields, FieldState match)
-		{
-			int tmp = 0;
-
-			// Loop unrolled
-			if (Unsafe.Add(ref fields, 0) == match) tmp |= 1 << 0;
-			if (Unsafe.Add(ref fields, 1) == match) tmp |= 1 << 1;
-			if (Unsafe.Add(ref fields, 2) == match) tmp |= 1 << 2;
-			if (Unsafe.Add(ref fields, 3) == match) tmp |= 1 << 3;
-			if (Unsafe.Add(ref fields, 4) == match) tmp |= 1 << 4;
-			if (Unsafe.Add(ref fields, 5) == match) tmp |= 1 << 5;
-			if (Unsafe.Add(ref fields, 6) == match) tmp |= 1 << 6;
-			if (Unsafe.Add(ref fields, 7) == match) tmp |= 1 << 7;
-			if (Unsafe.Add(ref fields, 8) == match) tmp |= 1 << 8;
-
-			return tmp;
-		}
-		//---------------------------------------------------------------------
 		internal bool IsFinal()
 		{
 			Winner winner = this.Winner;
-			bool result   = IsFinal(ref winner, ref _board.Fields);
+			bool result   = IsFinal(ref winner, _board);
 			this.Winner   = winner;
 
 			return result;
 		}
 		//---------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal static bool IsFinal(ref Winner winner, ref FieldState fields)
+		internal static bool IsFinal(ref Winner winner, Board board)
 		{
-			// x64 -> 8
-			// x86 -> 4
-			if (Vector.IsHardwareAccelerated && (Vector<int>.Count == 8 || Vector<int>.Count == 4))
-			{
-				bool isFinal = true;
+			// The set fields are stored in a int, for machine and user separately.
+			// So combine these int to one, to get all set fields.
+			// Invert it, so that the set ones get 0, and the empty ones get 1.
+			// Mask away all bits except the interesting first 9 (the game).
+			// When there is any empty field, at least one 1 remains (due the inversion).
 
-				if (winner != Winner.None) goto Exit;
+			if (winner != Winner.None) return true;
 
-				Vector<int> vec = Unsafe.As<FieldState, Vector<int>>(ref fields);
+			int invertedSetFields = ~board.SetFields;
+			invertedSetFields    &= 511;		// last 9 bits set to mask
+			bool isFinal 		  = invertedSetFields == 0;
 
-				if (Vector.EqualsAny(Vector<int>.Zero, vec))
-				{
-					isFinal = false;
-					goto Exit;
-				}
+			if (isFinal) winner = Winner.Draw;
 
-				if (Vector<int>.Count == 4)
-				{
-					vec = Unsafe.As<FieldState, Vector<int>>(ref Unsafe.Add(ref fields, 4));
-					if (Vector.EqualsAny(Vector<int>.Zero, vec))
-					{
-						isFinal = false;
-						goto Exit;
-					}
-				}
-
-				if (Unsafe.Add(ref fields, 8) == FieldState.Empty)
-				{
-					isFinal = false;
-					goto Exit;
-				}
-
-			Exit:
-				if (isFinal && winner == Winner.None)
-					winner = Winner.Draw;
-
-				return isFinal;
-			}
-			else
-			{
-				if (winner != Winner.None) return true;
-
-				for (int i = 0; i < 9; ++i)
-				{
-					if (Unsafe.Add(ref fields, i) == FieldState.Empty)
-						return false;
-				}
-
-				winner = Winner.Draw;
-				return true;
-			}
+			return isFinal;
 		}
 	}
 }

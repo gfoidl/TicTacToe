@@ -8,7 +8,7 @@ namespace TicTacToe.Engine.Tests.BoardTests
 		[Test]
 		public void Empty_board_get___Empty()
 		{
-			var sut = new Board(true);
+			var sut = new Board();
 
 			FieldState actual = sut[3];
 
@@ -18,7 +18,7 @@ namespace TicTacToe.Engine.Tests.BoardTests
 		[Test]
 		public void Empty_board_set_and_get___OK([Values(FieldState.User, FieldState.Machine)] FieldState value)
 		{
-			var sut = new Board(true);
+			var sut = new Board();
 			sut[3] 	= value;
 
 			FieldState actual = sut[3];
@@ -29,7 +29,7 @@ namespace TicTacToe.Engine.Tests.BoardTests
 		[Test]
 		public void Set_and_get___OK([Values(FieldState.User, FieldState.Machine)] FieldState value)
 		{
-			var sut = new Board(true);
+			var sut = new Board();
 
 			for (int i = 0; i < 9; ++i)
 				sut[i] = value;
