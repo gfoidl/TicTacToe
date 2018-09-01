@@ -71,7 +71,6 @@ namespace TicTacToe.ViewModels
 				this.FinalInfo();
 			else if (!result.MoveIsLegal)
 			{
-
 			}
 			else
 			{

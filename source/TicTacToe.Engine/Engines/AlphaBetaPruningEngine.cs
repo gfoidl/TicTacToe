@@ -3,24 +3,17 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace TicTacToe.Engine
+namespace TicTacToe.Engine.Engines
 {
-	internal class AlphaBetaPruning
+	public class AlphaBetaPruningEngine : IEngine
 	{
 		public int FindBestMove(Board board)
 		{
-			int bestMove = -1;
+			foreach (int index in board.GetEmptyFields())
+				return index;
 
-			for (int i = 0; i < 9; ++i)
-			{
-				if (board[i] != FieldState.Empty) continue;
-
-				return i;
-			}
-
-			return bestMove;
+			return -1;
 		}
-		//---------------------------------------------------------------------
 		//---------------------------------------------------------------------
 		private int MiniMax(bool machineMove, int depth, int alpha, int beta)
 		{

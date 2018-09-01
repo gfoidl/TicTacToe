@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using TicTacToe.Engine.Engines;
 
 namespace TicTacToe.Engine
 {
@@ -8,8 +10,8 @@ namespace TicTacToe.Engine
 	public class Game
 	{
 		private static readonly int[] s_WinPatterns;
-		private Board 					  _board  = new Board(init: true);
-		private readonly AlphaBetaPruning _engine = new AlphaBetaPruning();
+		private Board 			 _board = new Board(init: true);
+		private readonly IEngine _engine;
 		//---------------------------------------------------------------------
 		static Game()
 		{
@@ -34,6 +36,9 @@ namespace TicTacToe.Engine
 			s_WinPatterns = winPatterns;
 		}
 		//---------------------------------------------------------------------
+		public Game() : this(new AlphaBetaPruningEngine()) { }
+		public Game(IEngine engine) => _engine = engine ?? throw new ArgumentNullException(nameof(engine));
+		//---------------------------------------------------------------------
 		public Board Board => _board;
 		public Winner Winner { get; internal set; } = Winner.None;
 		//---------------------------------------------------------------------
@@ -48,7 +53,10 @@ namespace TicTacToe.Engine
 		{
 			int bestMove = _engine.FindBestMove(_board);
 
-			return this.PerformMove(bestMove, FieldState.Machine);
+			if (bestMove > -1)
+				return this.PerformMove(bestMove, FieldState.Machine);
+			else
+				return new MoveResult(false, true);
 		}
 		//---------------------------------------------------------------------
 		private MoveResult PerformMove(int fieldIdx, FieldState fieldState)
@@ -116,10 +124,17 @@ namespace TicTacToe.Engine
 			return tmp;
 		}
 		//---------------------------------------------------------------------
-		internal bool IsFinal() => IsFinal(this.Winner, ref _board.Fields);
+		internal bool IsFinal()
+		{
+			Winner winner = this.Winner;
+			bool result   = IsFinal(ref winner, ref _board.Fields);
+			this.Winner   = winner;
+
+			return result;
+		}
 		//---------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal static bool IsFinal(Winner winner, ref FieldState fields)
+		internal static bool IsFinal(ref Winner winner, ref FieldState fields)
 		{
 			// x64 -> 8
 			// x86 -> 4
@@ -153,7 +168,10 @@ namespace TicTacToe.Engine
 					goto Exit;
 				}
 
-				Exit:
+			Exit:
+				if (isFinal && winner == Winner.None)
+					winner = Winner.Draw;
+
 				return isFinal;
 			}
 			else
@@ -166,6 +184,7 @@ namespace TicTacToe.Engine
 						return false;
 				}
 
+				winner = Winner.Draw;
 				return true;
 			}
 		}

@@ -1,4 +1,6 @@
-﻿namespace TicTacToe.Engine
+﻿using System.Collections.Generic;
+
+namespace TicTacToe.Engine
 {
 	public readonly struct Board
 	{
@@ -16,5 +18,12 @@
 		}
 		//---------------------------------------------------------------------
 		public bool IsMoveLegal(int index) => this[index] == FieldState.Empty;
+		//---------------------------------------------------------------------
+		public IEnumerable<int> GetEmptyFields()
+		{
+			FieldState[] fields = _fields;
+			for (int i = 0; i < fields.Length; ++i)
+				if (fields[i] == FieldState.Empty) yield return i;
+		}
 	}
 }
