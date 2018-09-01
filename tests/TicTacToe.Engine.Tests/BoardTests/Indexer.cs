@@ -2,44 +2,44 @@
 
 namespace TicTacToe.Engine.Tests.BoardTests
 {
-	[TestFixture]
-	public class Indexer
-	{
-		[Test]
-		public void Empty_board_get___Empty()
-		{
-			var sut = new Board();
+    [TestFixture]
+    public class Indexer
+    {
+        [Test]
+        public void Empty_board_get___Empty()
+        {
+            var sut = new Board();
 
-			FieldState actual = sut[3];
+            FieldState actual = sut[3];
 
-			Assert.AreEqual(FieldState.Empty, actual);
-		}
-		//---------------------------------------------------------------------
-		[Test]
-		public void Empty_board_set_and_get___OK([Values(FieldState.User, FieldState.Machine)] FieldState value)
-		{
-			var sut = new Board();
-			sut[3] 	= value;
+            Assert.AreEqual(FieldState.Empty, actual);
+        }
+        //---------------------------------------------------------------------
+        [Test]
+        public void Empty_board_set_and_get___OK([Values(FieldState.User, FieldState.Machine)] FieldState value)
+        {
+            var sut = new Board();
+            sut[3]  = value;
 
-			FieldState actual = sut[3];
+            FieldState actual = sut[3];
 
-			Assert.AreEqual(value, actual);
-		}
-		//---------------------------------------------------------------------
-		[Test]
-		public void Set_and_get___OK([Values(FieldState.User, FieldState.Machine)] FieldState value)
-		{
-			var sut = new Board();
+            Assert.AreEqual(value, actual);
+        }
+        //---------------------------------------------------------------------
+        [Test]
+        public void Set_and_get___OK([Values(FieldState.User, FieldState.Machine)] FieldState value)
+        {
+            var sut = new Board();
 
-			for (int i = 0; i < 9; ++i)
-				sut[i] = value;
+            for (int i = 0; i < 9; ++i)
+                sut[i] = value;
 
-			FieldState expected = value == FieldState.User ? FieldState.Machine : FieldState.User;
-			sut[4] 				= expected;
+            FieldState expected = value == FieldState.User ? FieldState.Machine : FieldState.User;
+            sut[4]              = expected;
 
-			FieldState actual = sut[4];
+            FieldState actual = sut[4];
 
-			Assert.AreEqual(expected, actual);
-		}
-	}
+            Assert.AreEqual(expected, actual);
+        }
+    }
 }

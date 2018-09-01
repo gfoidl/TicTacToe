@@ -1,101 +1,101 @@
-﻿<Window x:Class		="TicTacToe.MainWindow"
-		xmlns		="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x		="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:d		="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:mc	="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:vm	="clr-namespace:TicTacToe.ViewModels"
-		xmlns:conv	="clr-namespace:TicTacToe.Converters"
-		mc:Ignorable="d"
-		ResizeMode	="CanMinimize"
-		Title		="Tic Tac Toe"
-		Height		="450" Width="450" >
+﻿<Window x:Class     ="TicTacToe.MainWindow"
+        xmlns       ="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x     ="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d     ="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc    ="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm    ="clr-namespace:TicTacToe.ViewModels"
+        xmlns:conv  ="clr-namespace:TicTacToe.Converters"
+        mc:Ignorable="d"
+        ResizeMode  ="CanMinimize"
+        Title       ="Tic Tac Toe"
+        Height      ="450" Width="450" >
 
-	<Window.DataContext>
-		<vm:ViewModel />
-	</Window.DataContext>
+    <Window.DataContext>
+        <vm:ViewModel />
+    </Window.DataContext>
 
-	<Window.Resources>
-		<Style TargetType="TextBlock">
-			<Setter Property="FontWeight" Value="Bold" />
-			<Setter Property="FontSize" Value="72" />
-			<Setter Property="FontFamily" Value="MS Reference Sans Serif" />
-		</Style>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="72" />
+            <Setter Property="FontFamily" Value="MS Reference Sans Serif" />
+        </Style>
 
-		<Style TargetType="Button">
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding IsBusy}" Value="true">
-					<Setter Property="IsEnabled" Value="False" />
-				</DataTrigger>
-			</Style.Triggers>
-		</Style>
-	</Window.Resources>
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsBusy}" Value="true">
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition />
-			<RowDefinition />
-			<RowDefinition />
-		</Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
-			<ColumnDefinition />
-			<ColumnDefinition />
-		</Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-		<Button Grid.Row="0" Grid.Column="0" 
-				Command="{Binding UserMoveCommand}" 	CommandParameter="0" 
-				Background="{Binding Board[0], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[0], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="0" Grid.Column="0"
+                Command="{Binding UserMoveCommand}"     CommandParameter="0"
+                Background="{Binding Board[0], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[0], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="0" Grid.Column="1" 
-				Command="{Binding UserMoveCommand}" 	CommandParameter="1" 
-				Background="{Binding Board[1], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[1], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="0" Grid.Column="1"
+                Command="{Binding UserMoveCommand}"     CommandParameter="1"
+                Background="{Binding Board[1], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[1], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="0" Grid.Column="2"
-				Command="{Binding UserMoveCommand}" CommandParameter="2" 
-				Background="{Binding Board[2], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[2], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="0" Grid.Column="2"
+                Command="{Binding UserMoveCommand}" CommandParameter="2"
+                Background="{Binding Board[2], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[2], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="1" Grid.Column="0" 
-				Command="{Binding UserMoveCommand}" CommandParameter="3" 
-				Background="{Binding Board[3], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[3], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="1" Grid.Column="0"
+                Command="{Binding UserMoveCommand}" CommandParameter="3"
+                Background="{Binding Board[3], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[3], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="1" Grid.Column="1" 
-				Command="{Binding UserMoveCommand}" CommandParameter="4" 
-				Background="{Binding Board[4], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[4], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="1" Grid.Column="1"
+                Command="{Binding UserMoveCommand}" CommandParameter="4"
+                Background="{Binding Board[4], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[4], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="1" Grid.Column="2" 
-				Command="{Binding UserMoveCommand}" CommandParameter="5" 
-				Background="{Binding Board[5], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[5], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="1" Grid.Column="2"
+                Command="{Binding UserMoveCommand}" CommandParameter="5"
+                Background="{Binding Board[5], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[5], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="2" Grid.Column="0" 
-				Command="{Binding UserMoveCommand}" CommandParameter="6" 
-				Background="{Binding Board[6], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[6], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="2" Grid.Column="0"
+                Command="{Binding UserMoveCommand}" CommandParameter="6"
+                Background="{Binding Board[6], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[6], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="2" Grid.Column="1" 
-				Command="{Binding UserMoveCommand}" CommandParameter="7" 
-				Background="{Binding Board[7], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[7], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
+        <Button Grid.Row="2" Grid.Column="1"
+                Command="{Binding UserMoveCommand}" CommandParameter="7"
+                Background="{Binding Board[7], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[7], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
 
-		<Button Grid.Row="2" Grid.Column="2" 
-				Command="{Binding UserMoveCommand}" CommandParameter="8" 
-				Background="{Binding Board[8], Converter={conv:FieldStateToColorConverter}}">
-			<TextBlock Text="{Binding Board[8], Converter={conv:FieldStateToSignConverter}}" />
-		</Button>
-	</Grid>
+        <Button Grid.Row="2" Grid.Column="2"
+                Command="{Binding UserMoveCommand}" CommandParameter="8"
+                Background="{Binding Board[8], Converter={conv:FieldStateToColorConverter}}">
+            <TextBlock Text="{Binding Board[8], Converter={conv:FieldStateToSignConverter}}" />
+        </Button>
+    </Grid>
 
 </Window>
