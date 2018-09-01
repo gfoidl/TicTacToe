@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace TicTacToe.Engine.Tests.GameTests
+namespace TicTacToe.Engine.Tests.BoardTests
 {
 	[TestFixture]
 	public class CheckWinner
@@ -10,41 +10,39 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[Test]
 		public void Start___no_winner()
 		{
-			var sut = new Game();
+			var sut = new Board();
 
-			sut.CheckWinner();
+			Winner actual = sut.CheckWinner();
 
-			Assert.AreEqual(Winner.None, sut.Winner);
+			Assert.AreEqual(Winner.None, actual);
 		}
 		//---------------------------------------------------------------------
 		[Test]
 		public void Only_two_rounds___no_winner()
 		{
-			var sut   = new Game();
-			var board = sut.Board;
+			var sut = new Board();
 
-			board[0] = FieldState.User;
-			board[1] = FieldState.User;
-			board[4] = FieldState.Machine;
+			sut[0] = FieldState.User;
+			sut[1] = FieldState.User;
+			sut[4] = FieldState.Machine;
 
-			sut.CheckWinner();
+			Winner actual = sut.CheckWinner();
 
-			Assert.AreEqual(Winner.None, sut.Winner);
+			Assert.AreEqual(Winner.None, actual);
 		}
 		//---------------------------------------------------------------------
 		[Test]
 		[TestCaseSource(nameof(User_wins___winner_set_TestCases))]
 		public void User_wins___winner_set(FieldState[] fieldStates)
 		{
-			var sut   = new Game();
-			var board = sut.Board;
+			var sut = new Board();
 
 			for (int i = 0; i < 9; ++i)
-				board[i] = fieldStates[i];
+				sut[i] = fieldStates[i];
 
-			sut.CheckWinner();
+			Winner actual = sut.CheckWinner();
 
-			Assert.AreEqual(Winner.User, sut.Winner);
+			Assert.AreEqual(Winner.User, actual);
 		}
 		//---------------------------------------------------------------------
 		private static IEnumerable<TestCaseData> User_wins___winner_set_TestCases()
@@ -74,15 +72,14 @@ namespace TicTacToe.Engine.Tests.GameTests
 		[TestCaseSource(nameof(Machine_wins___winner_set_TestCases))]
 		public void Machine_wins___winner_set(FieldState[] fieldStates)
 		{
-			var sut   = new Game();
-			var board = sut.Board;
+			var sut = new Board();
 
 			for (int i = 0; i < 9; ++i)
-				board[i] = fieldStates[i];
+				sut[i] = fieldStates[i];
 
-			sut.CheckWinner();
+			Winner actual = sut.CheckWinner();
 
-			Assert.AreEqual(Winner.Machine, sut.Winner);
+			Assert.AreEqual(Winner.Machine, actual);
 		}
 		//---------------------------------------------------------------------
 		private static IEnumerable<TestCaseData> Machine_wins___winner_set_TestCases()
