@@ -44,13 +44,13 @@
         </Grid.ColumnDefinitions>
 
         <Button Grid.Row="0" Grid.Column="0"
-                Command="{Binding UserMoveCommand}"     CommandParameter="0"
+                Command="{Binding UserMoveCommand}" CommandParameter="0"
                 Background="{Binding Board[0], Converter={conv:FieldStateToColorConverter}}">
             <TextBlock Text="{Binding Board[0], Converter={conv:FieldStateToSignConverter}}" />
         </Button>
 
         <Button Grid.Row="0" Grid.Column="1"
-                Command="{Binding UserMoveCommand}"     CommandParameter="1"
+                Command="{Binding UserMoveCommand}" CommandParameter="1"
                 Background="{Binding Board[1], Converter={conv:FieldStateToColorConverter}}">
             <TextBlock Text="{Binding Board[1], Converter={conv:FieldStateToSignConverter}}" />
         </Button>
