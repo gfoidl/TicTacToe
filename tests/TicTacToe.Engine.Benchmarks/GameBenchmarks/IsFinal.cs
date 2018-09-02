@@ -5,63 +5,72 @@ using BenchmarkDotNet.Attributes;
 
 namespace TicTacToe.Engine.Benchmarks.GameBenchmarks
 {
-    [ClrJob, CoreJob]
-    public class IsFinal
-    {
-        public FieldState[] Fields { get; } = Enumerable.Repeat(FieldState.User, 9).ToArray();
-        //---------------------------------------------------------------------
-        [Benchmark(Baseline = true)]
-        public bool Sequential()
-        {
-            FieldState[] fields = this.Fields;
+	[ClrJob, CoreJob]
+	public class IsFinal
+	{
+		public FieldState[] Fields { get; } = Enumerable.Repeat(FieldState.User, 9).ToArray();
+		private int _fields = 0x1ff;		// all set
+		//---------------------------------------------------------------------
+		[Benchmark(Baseline = true)]
+		public bool Sequential()
+		{
+			FieldState[] fields = this.Fields;
 
-            for (int i = 0; i < fields.Length; ++i)
-            {
-                if (fields[i] == FieldState.Empty)
-                    return false;
-            }
+			for (int i = 0; i < fields.Length; ++i)
+			{
+				if (fields[i] == FieldState.Empty)
+					return false;
+			}
 
-            return true;
-        }
-        //---------------------------------------------------------------------
-        [Benchmark]
-        public unsafe bool Vectorized()
-        {
-            // x64 -> 8
-            // x86 -> 4
-            if (Vector.IsHardwareAccelerated && (Vector<int>.Count == 8 || Vector<int>.Count == 4))
-            {
-                fixed (FieldState* tmpPtr = this.Fields)
-                {
-                    int* ptr = (int*)tmpPtr;
+			return true;
+		}
+		//---------------------------------------------------------------------
+		[Benchmark]
+		public unsafe bool Vectorized()
+		{
+			// x64 -> 8
+			// x86 -> 4
+			if (Vector.IsHardwareAccelerated && (Vector<int>.Count == 8 || Vector<int>.Count == 4))
+			{
+				fixed (FieldState* tmpPtr = this.Fields)
+				{
+					int* ptr = (int*)tmpPtr;
 
-                    Vector<int> emptyFields = Vector<int>.Zero;
+					Vector<int> emptyFields = Vector<int>.Zero;
 
-                    Vector<int> vec = Unsafe.ReadUnaligned<Vector<int>>(ptr + 0);
-                    if (Vector.EqualsAny(emptyFields, vec))
-                        return false;
+					Vector<int> vec = Unsafe.ReadUnaligned<Vector<int>>(ptr + 0);
+					if (Vector.EqualsAny(emptyFields, vec))
+						return false;
 
-                    if (Vector<int>.Count == 4)
-                    {
-                        vec = Unsafe.ReadUnaligned<Vector<int>>(ptr + 4);
-                        if (Vector.EqualsAny(emptyFields, vec))
-                            return false;
-                    }
+					if (Vector<int>.Count == 4)
+					{
+						vec = Unsafe.ReadUnaligned<Vector<int>>(ptr + 4);
+						if (Vector.EqualsAny(emptyFields, vec))
+							return false;
+					}
 
-                    if (ptr[8] == (int)FieldState.Empty)
-                        return false;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < 9; ++i)
-                {
-                    if (this.Fields[i] == FieldState.Empty)
-                        return false;
-                }
-            }
+					if (ptr[8] == (int)FieldState.Empty)
+						return false;
+				}
+			}
+			else
+			{
+				for (int i = 0; i < 9; ++i)
+				{
+					if (this.Fields[i] == FieldState.Empty)
+						return false;
+				}
+			}
 
-            return true;
-        }
-    }
+			return true;
+		}
+		//---------------------------------------------------------------------
+		[Benchmark]
+		public bool Int_encoded()
+		{
+			int invertedSetFields = ~_fields;
+			invertedSetFields    &= 0x1ff;       // last 9 bits set to mask. 511
+			return invertedSetFields > 0;
+		}
+	}
 }

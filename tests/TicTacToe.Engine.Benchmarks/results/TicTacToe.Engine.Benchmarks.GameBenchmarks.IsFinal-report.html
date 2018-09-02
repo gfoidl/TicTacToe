@@ -5,10 +5,10 @@
 <title>TicTacToe.Engine.Benchmarks.GameBenchmarks.IsFinal</title>
 
 <style type="text/css">
-    table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
-    td, th { padding: 6px 13px; border: 1px solid #ddd; }
-    tr { background-color: #fff; border-top: 1px solid #ccc; }
-    tr:nth-child(even) { background: #f8f8f8; }
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
 </style>
 </head>
 <body>
@@ -26,10 +26,12 @@ Frequency=2742186 Hz, Resolution=364.6726 ns, Timer=TSC
 <table>
 <thead><tr><th>Method</th><th>Job</th><th>Runtime</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Scaled</th>
 </tr>
-</thead><tbody><tr><td>Sequential</td><td>Clr</td><td>Clr</td><td>3.940 ns</td><td>0.0387 ns</td><td>0.0362 ns</td><td>1.00</td>
-</tr><tr><td>Vectorized</td><td>Clr</td><td>Clr</td><td>1.981 ns</td><td>0.0298 ns</td><td>0.0279 ns</td><td>0.50</td>
-</tr><tr><td>Sequential</td><td>Core</td><td>Core</td><td>6.288 ns</td><td>0.1611 ns</td><td>0.1790 ns</td><td>1.00</td>
-</tr><tr><td>Vectorized</td><td>Core</td><td>Core</td><td>2.015 ns</td><td>0.0302 ns</td><td>0.0283 ns</td><td>0.32</td>
+</thead><tbody><tr><td>Sequential</td><td>Clr</td><td>Clr</td><td>3.9211 ns</td><td>0.0499 ns</td><td>0.0467 ns</td><td>1.000</td>
+</tr><tr><td>Vectorized</td><td>Clr</td><td>Clr</td><td>2.0080 ns</td><td>0.0316 ns</td><td>0.0280 ns</td><td>0.512</td>
+</tr><tr><td>Int_encoded</td><td>Clr</td><td>Clr</td><td>0.0387 ns</td><td>0.0153 ns</td><td>0.0136 ns</td><td>0.010</td>
+</tr><tr><td>Sequential</td><td>Core</td><td>Core</td><td>3.9455 ns</td><td>0.0524 ns</td><td>0.0490 ns</td><td>1.00</td>
+</tr><tr><td>Vectorized</td><td>Core</td><td>Core</td><td>2.0543 ns</td><td>0.0284 ns</td><td>0.0266 ns</td><td>0.52</td>
+</tr><tr><td>Int_encoded</td><td>Core</td><td>Core</td><td>0.0642 ns</td><td>0.0254 ns</td><td>0.0225 ns</td><td>0.02</td>
 </tr></tbody></table>
 </body>
 </html>

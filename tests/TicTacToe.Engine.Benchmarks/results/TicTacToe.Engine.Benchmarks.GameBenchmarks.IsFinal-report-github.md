@@ -10,10 +10,12 @@ Frequency=2742186 Hz, Resolution=364.6726 ns, Timer=TSC
 
 
 ```
-|     Method |  Job | Runtime |     Mean |     Error |    StdDev | Scaled |
-|----------- |----- |-------- |---------:|----------:|----------:|-------:|
-| Sequential |  Clr |     Clr | 3.940 ns | 0.0387 ns | 0.0362 ns |   1.00 |
-| Vectorized |  Clr |     Clr | 1.981 ns | 0.0298 ns | 0.0279 ns |   0.50 |
-|            |      |         |          |           |           |        |
-| Sequential | Core |    Core | 6.288 ns | 0.1611 ns | 0.1790 ns |   1.00 |
-| Vectorized | Core |    Core | 2.015 ns | 0.0302 ns | 0.0283 ns |   0.32 |
+|      Method |  Job | Runtime |      Mean |     Error |    StdDev | Scaled |
+|------------ |----- |-------- |----------:|----------:|----------:|-------:|
+|  Sequential |  Clr |     Clr | 3.9211 ns | 0.0499 ns | 0.0467 ns |  1.000 |
+|  Vectorized |  Clr |     Clr | 2.0080 ns | 0.0316 ns | 0.0280 ns |  0.512 |
+| Int_encoded |  Clr |     Clr | 0.0387 ns | 0.0153 ns | 0.0136 ns |  0.010 |
+|             |      |         |           |           |           |        |
+|  Sequential | Core |    Core | 3.9455 ns | 0.0524 ns | 0.0490 ns |   1.00 |
+|  Vectorized | Core |    Core | 2.0543 ns | 0.0284 ns | 0.0266 ns |   0.52 |
+| Int_encoded | Core |    Core | 0.0642 ns | 0.0254 ns | 0.0225 ns |   0.02 |
