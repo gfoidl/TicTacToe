@@ -4,7 +4,7 @@ using TicTacToe.Engine.Engines;
 
 namespace TicTacToe.Engine
 {
-	public class Game
+	public class Game : IGame
 	{
 		private Board            _board = new Board();
 		private readonly IEngine _engine;
