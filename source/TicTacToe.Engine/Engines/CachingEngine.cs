@@ -5,7 +5,7 @@ namespace TicTacToe.Engine.Engines
     // A decorator about another IEngine
     public class CachingEngine : IEngine
     {
-        private static readonly Dictionary<int, int> _moveCache = new Dictionary<int, int>();
+        private static readonly Dictionary<uint, int> _moveCache = new Dictionary<uint, int>();
 
         private readonly IEngine _engine;
         //---------------------------------------------------------------------
@@ -14,7 +14,7 @@ namespace TicTacToe.Engine.Engines
         //---------------------------------------------------------------------
         public int FindBestMove(Board board)
         {
-            int key = board.GetKey();
+            uint key = board.GetKey();
 
             if (!_moveCache.TryGetValue(key, out int move))
             {
