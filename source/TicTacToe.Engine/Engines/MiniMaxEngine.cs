@@ -62,7 +62,7 @@ namespace TicTacToe.Engine.Engines
                 : Winner.User;
 
             return winner == me
-                ? 10 - depth
+                ?  10 - depth
                 : -10 + depth;
         }
     }

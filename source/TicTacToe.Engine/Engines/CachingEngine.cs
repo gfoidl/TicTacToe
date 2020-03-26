@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TicTacToe.Engine.Engines
 {
@@ -10,7 +11,7 @@ namespace TicTacToe.Engine.Engines
         private readonly IEngine _engine;
         //---------------------------------------------------------------------
         public CachingEngine(IEngine engine)
-            => _engine = engine ?? throw new System.ArgumentNullException(nameof(engine));
+            => _engine = engine ?? throw new ArgumentNullException(nameof(engine));
         //---------------------------------------------------------------------
         public int FindBestMove(Board board)
         {

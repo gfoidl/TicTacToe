@@ -8,7 +8,7 @@ namespace TicTacToe.Engine
     [DebuggerTypeProxy(typeof(BoardDebugView))]
     public struct Board
     {
-        private static readonly int[] s_WinPatterns;
+        private static readonly int[] s_winPatterns;
         //---------------------------------------------------------------------
         static Board()
         {
@@ -30,7 +30,7 @@ namespace TicTacToe.Engine
                 winPatterns[i] = tmp;
             }
 
-            s_WinPatterns = winPatterns;
+            s_winPatterns = winPatterns;
         }
         //---------------------------------------------------------------------
         private int _user;
@@ -82,11 +82,11 @@ namespace TicTacToe.Engine
         //---------------------------------------------------------------------
         public Winner CheckWinner()
         {
-            Debug.Assert(s_WinPatterns.Length == 8);
+            Debug.Assert(s_winPatterns.Length == 8);
 
             if (Vector.IsHardwareAccelerated && Vector<int>.Count == 8)
             {
-                Vector<int> comparand = Unsafe.As<int, Vector<int>>(ref s_WinPatterns[0]);
+                Vector<int> comparand = Unsafe.As<int, Vector<int>>(ref s_winPatterns[0]);
 
                 if (Vector.EqualsAny(Vector.BitwiseAnd(comparand, new Vector<int>(_machine)), comparand))
                     return Winner.Machine;
@@ -96,7 +96,7 @@ namespace TicTacToe.Engine
             }
             else
             {
-                int[] patterns = s_WinPatterns;
+                int[] patterns = s_winPatterns;
                 int machine    = _machine;
                 int user       = _user;
 

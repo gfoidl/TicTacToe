@@ -20,20 +20,12 @@ namespace TicTacToe.Engine
             $" {GetFieldSign(board, 6)} | {GetFieldSign(board, 7)} | {GetFieldSign(board, 8)}";
         //---------------------------------------------------------------------
         private static string GetFieldSign(Board board, int index)
-        {
-            FieldState fieldState = board[index];
-
-            switch (fieldState)
+            => (board[index]) switch
             {
-                case FieldState.Empty:
-                    return " ";
-                case FieldState.Machine:
-                    return "O";
-                case FieldState.User:
-                    return "X";
-                default:
-                    throw new NotSupportedException();
-            }
-        }
+                FieldState.Empty   => " ",
+                FieldState.Machine => "O",
+                FieldState.User    => "X",
+                _                  => throw new NotSupportedException(),
+            };
     }
 }

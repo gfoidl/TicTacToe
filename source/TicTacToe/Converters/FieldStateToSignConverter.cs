@@ -12,19 +12,13 @@ namespace TicTacToe.Converters
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
         //---------------------------------------------------------------------
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((FieldState)value)
+            => ((FieldState)value) switch
             {
-                case FieldState.Empty:
-                    return " ";
-                case FieldState.Machine:
-                    return "O";
-                case FieldState.User:
-                    return "X";
-                default:
-                    throw new NotSupportedException();
-            }
-        }
+                FieldState.Empty   => " ",
+                FieldState.Machine => "O",
+                FieldState.User    => "X",
+                _                  => throw new NotSupportedException(),
+            };
         //---------------------------------------------------------------------
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
